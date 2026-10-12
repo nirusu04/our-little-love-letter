@@ -47,4 +47,9 @@ export const loveStory = {
     photo: 'I would pick this moment with you every time.',
     seal: 'our little secret: I love you.',
   },
+  finalSecret: {
+    title: 'every dudu needs a bubu ♡',
+    message: 'and I am so glad mine is you.',
+    afterClicks: 'okay okay... that is a lot of love ♡',
+  },
 };

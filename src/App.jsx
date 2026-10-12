@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, LayoutGroup, motion } from 'framer-motion';
 import { ArrowLeft, ArrowRight, Heart, Music2, Pause, Play, Sparkles, X } from 'lucide-react';
 import { loveStory } from './data/loveStory';
+import FinalSecretReveal from './components/FinalSecretReveal';
 
 const sceneNames = ['Envelope', 'Intro', 'Letter', 'Memories', 'Things I love', 'Kisses', 'Coupons', 'Our song'];
 const sceneMotion = { initial: { opacity: 0, y: 18, rotate: 0.7, scale: 0.99 }, animate: { opacity: 1, y: 0, rotate: 0, scale: 1, transition: { duration: 0.7, ease: [0.22, 1, 0.36, 1] } }, exit: { opacity: 0, y: -14, rotate: -0.5, scale: 0.995, transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] } } };
@@ -126,7 +127,10 @@ function SongScene({ onFinish }) {
   return <motion.section className="scene song-scene" {...sceneMotion}><div className="scene-heading"><p className="eyebrow">press play when you are ready</p><h2>our song <em>♫</em></h2></div><div className="record-player"><div className={`vinyl ${playing ? 'spinning' : ''}`}><div className="vinyl-label"><img src={loveStory.song.cover} alt="Placeholder album cover" /></div></div><button className="play-button" onClick={toggle} aria-label={playing ? 'Pause our song' : 'Play our song'}>{playing ? <Pause size={22} fill="currentColor" /> : <Play size={22} fill="currentColor" />}</button></div><div className="song-details"><Music2 size={17} /><div><strong>{loveStory.song.title}</strong><span>{loveStory.song.artist}</span></div></div><audio ref={audioRef} src={loveStory.song.audio} onEnded={() => setPlaying(false)} /><button className="next-note" onClick={onFinish}>there is one last thing <ArrowRight size={15} /></button></motion.section>;
 }
 
-function FinalScene({ onSecret }) { return <motion.section className="scene final-scene" {...sceneMotion}><div className="final-stars" aria-hidden="true">✦　♡　✧　♡　✦</div><p className="eyebrow">the last page, for now</p><h1>Two years down.<br /><em>And I'd still choose you.</em></h1><p className="final-message">{loveStory.finalMessage}</p><p className="signature">Happy anniversary,<br /><em>my love. ♡</em></p><button className="one-more" onClick={onSecret}>one more thing... <Heart size={16} fill="currentColor" /></button></motion.section>; }
+function FinalScene() {
+  const [revealed, setRevealed] = useState(false);
+  return <motion.section className="scene final-scene" {...sceneMotion}><div className="final-stars" aria-hidden="true">✦　♡　✧　♡　✦</div><p className="eyebrow">the last page, for now</p><h1>Two years down.<br /><em>And I'd still choose you.</em></h1><p className="final-message">{loveStory.finalMessage}</p><p className="signature">Happy anniversary,<br /><em>my love. ♡</em></p><button className="one-more" onClick={() => setRevealed(true)}>one more thing... <Heart size={16} fill="currentColor" /></button><FinalSecretReveal open={revealed} data={loveStory.finalSecret} /></motion.section>;
+}
 
 function App() {
   const [scene, setScene] = useState(0); const [direction, setDirection] = useState(1); const [opened, setOpened] = useState(false); const [opening, setOpening] = useState(false); const [bridge, setBridge] = useState(null); const [secret, setSecret] = useState(''); const [selectedPhoto, setSelectedPhoto] = useState(null); const touchStart = useRef(0); const bridgeTimer = useRef(null);
