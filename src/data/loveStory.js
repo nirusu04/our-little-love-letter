@@ -1,0 +1,50 @@
+// Edit this file to make the letter yours. Replace every ALL-CAPS placeholder.
+export const loveStory = {
+  boyfriendName: 'YOUR BOYFRIEND',
+  nickname: 'Arjun',
+  anniversaryDate: '10.XX.2026',
+  yearsTogether: 2,
+  intro: 'I made you a tiny world out of all the reasons I love us.',
+  letter: [
+    'Dear mutu,',
+    'Somehow, two years have passed and I still get that little spark every time I see your name light up my phone.',
+    'Thank you for making ordinary days feel like something worth keeping. I love our jokes, our quiet moments, and the way being with you feels like coming home.',
+    'Here is a small collection of the moments, memories, and ridiculously many kisses I am saving for us.',
+    'Love always, YOUR NAME',
+  ],
+  photos: [
+    { src: '/photos/memory-one.svg', caption: 'our favorite kind of ordinary', date: 'THE DAY / PLACE', alt: 'Placeholder scrapbook photo one' },
+    { src: '/photos/memory-two.svg', caption: 'the one where we could not stop laughing', date: 'THE DAY / PLACE', alt: 'Placeholder scrapbook photo two' },
+    { src: '/photos/memory-three.svg', caption: 'you, being my favorite person', date: 'THE DAY / PLACE', alt: 'Placeholder scrapbook photo three' },
+    { src: '/photos/memory-four.svg', caption: 'a little moment I keep replaying', date: 'THE DAY / PLACE', alt: 'Placeholder scrapbook photo four' },
+    { src: '/photos/memory-five.svg', caption: 'still my best adventure', date: 'THE DAY / PLACE', alt: 'Placeholder scrapbook photo five' },
+  ],
+  memories: [
+    { date: 'CHAPTER ONE', title: 'The beginning', description: 'Write the story of the moment this all started.', photo: '/photos/memory-one.svg' },
+    { date: 'CHAPTER TWO', title: 'Our first little tradition', description: 'A tiny ritual that became ours.', photo: '/photos/memory-two.svg' },
+    { date: 'CHAPTER THREE', title: 'The adventure', description: 'The place, trip, or day you never want to forget.', photo: '/photos/memory-three.svg' },
+    { date: 'CHAPTER FOUR', title: 'The ordinary magic', description: 'The quiet days that somehow mean the most.', photo: '/photos/memory-four.svg' },
+    { date: 'NOW', title: 'Two years of us', description: 'And I would choose this story all over again.', photo: '/photos/memory-five.svg' },
+  ],
+  reasonsILoveYou: [
+    'You make ordinary days feel special.',
+    'You always know how to make me laugh.',
+    'I love who I am when I am with you.',
+    'You are still the person I want to tell everything to.',
+    'Somehow two years later, you are still my favorite notification.',
+  ],
+  coupons: ['UNLIMITED HUGS', 'MOVIE NIGHT', 'YOUR WISH', 'DATE OF YOUR CHOICE'],
+  song: {
+    title: 'Yellow',
+    artist: 'Coldplay',
+    cover: '/photos/song-cover.svg',
+    audio: '/audio/our-song.mp3',
+    spotifyUrl: '',
+  },
+  finalMessage: 'Thank you for being my favorite place to be. I cannot wait for all the chapters we have not written yet.',
+  secretMessages: {
+    intro: 'psst... I still have a crush on you.',
+    photo: 'I would pick this moment with you every time.',
+    seal: 'our little secret: I love you.',
+  },
+};
