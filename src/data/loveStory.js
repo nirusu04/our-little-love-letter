@@ -7,7 +7,7 @@ export const loveStory = {
   intro: 'I made you a tiny world out of all the reasons I love us.',
   letter: [
     'Dear love,',
-    'Somehow, two years have passed and I still get that little spark every time I see your name light up my phone.',
+    'Somehow, two years have passed and It is still not enough. This is only the beginning to our beautiful journey together.',
     'Thank you for making ordinary days feel like something worth keeping. I love doing life with you, our quiet moments, and the way being with you feels like coming home.',
     'Here is a small collection of the moments, memories, and ridiculously many kisses I am saving for us.',
     'Love always, Your mayalu <3',
