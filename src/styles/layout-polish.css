@@ -1,0 +1,70 @@
+.envelope-scene {
+  width: 100%;
+  max-width: 100vw;
+  overflow: hidden;
+}
+
+.letter-desk {
+  width: 100%;
+  max-width: 100%;
+}
+
+.love-envelope {
+  width: min(690px, calc(100vw - 64px));
+  height: min(430px, calc((100vw - 64px) * .62));
+}
+
+.letter-content {
+  min-width: 0;
+  max-width: 550px;
+  padding-right: 18px;
+}
+
+.letter-content p:not(.eyebrow) {
+  max-width: 60ch;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 900px) {
+  .scene {
+    width: 100%;
+    max-width: 100vw;
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  .envelope-scene {
+    padding: 24px 14px 76px;
+  }
+
+  .letter-desk {
+    min-height: calc(100svh - 100px);
+  }
+
+  .love-envelope {
+    width: min(92vw, 520px);
+    height: min(57vw, 310px);
+    min-height: 220px;
+  }
+
+  .letter-stage {
+    padding-bottom: 42px;
+  }
+
+  .letter-content {
+    width: 100%;
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
+
+@media (max-width: 600px) {
+  .love-envelope {
+    width: min(92vw, 420px);
+  }
+
+  .letter-content p:not(.eyebrow) {
+    font-size: 19px;
+    line-height: 1.42;
+  }
+}
