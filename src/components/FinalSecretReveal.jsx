@@ -4,11 +4,11 @@ import { motion } from 'framer-motion';
 import { Heart, Sparkles, X } from 'lucide-react';
 
 const framePaths = [
-  '/photos/resting%20cuddle.png',
-  '/photos/beginning%20to%20lean.png',
-  '/photos/forehead%20kiss%20contact.png',
-  '/photos/delighted%20reaction.png',
-  '/photos/settle%20back.png',
+  './photos/resting%20cuddle.png',
+  './photos/beginning%20to%20lean.png',
+  './photos/forehead%20kiss%20contact.png',
+  './photos/delighted%20reaction.png',
+  './photos/settle%20back.png',
 ];
 const particleTypes = ['kiss', 'heart', 'star', 'sparkle'];
 const particleColors = ['#9e3445', '#c9787e', '#d6a85f', '#f8eedb'];
