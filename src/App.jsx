@@ -1,14 +1,42 @@
 import { useEffect, useRef, useState } from 'react';
-import { AnimatePresence, motion } from 'framer-motion';
+import { AnimatePresence, LayoutGroup, motion } from 'framer-motion';
 import { ArrowLeft, ArrowRight, Heart, Music2, Pause, Play, Sparkles, X } from 'lucide-react';
 import { loveStory } from './data/loveStory';
 
 const sceneNames = ['Envelope', 'Intro', 'Letter', 'Memories', 'Things I love', 'Kisses', 'Coupons', 'Our song'];
-const sceneMotion = { initial: { opacity: 0, x: 70, rotate: 1.2 }, animate: { opacity: 1, x: 0, rotate: 0, transition: { duration: 0.65, ease: [0.22, 1, 0.36, 1] } }, exit: { opacity: 0, x: -60, rotate: -1, transition: { duration: 0.35 } } };
+const sceneMotion = { initial: { opacity: 0, y: 18, rotate: 0.7, scale: 0.99 }, animate: { opacity: 1, y: 0, rotate: 0, scale: 1, transition: { duration: 0.7, ease: [0.22, 1, 0.36, 1] } }, exit: { opacity: 0, y: -14, rotate: -0.5, scale: 0.995, transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] } } };
+const pageVariants = {
+  initial: (direction) => ({ opacity: 0, y: direction > 0 ? 34 : -34, rotate: direction > 0 ? 0.7 : -0.7, scale: 0.985, clipPath: direction > 0 ? 'inset(7% 0 0 round 12px)' : 'inset(0 0 7% round 12px)' }),
+  animate: { opacity: 1, y: 0, rotate: 0, scale: 1, clipPath: 'inset(0% 0 0 round 0px)', transition: { duration: 0.82, ease: [0.22, 1, 0.36, 1] } },
+  exit: (direction) => ({ opacity: 0, y: direction > 0 ? -30 : 30, rotate: direction > 0 ? -0.5 : 0.5, scale: 0.99, transition: { duration: 0.58, ease: [0.22, 1, 0.36, 1] } }),
+};
 
 function Paper({ children, className = '', ...props }) { return <motion.div className={`paper ${className}`} {...props}>{children}</motion.div>; }
 function Tape() { return <span className="tape" aria-hidden="true" />; }
 function HeartBurst({ burst }) { return burst ? <div className="heart-burst" aria-hidden="true">{Array.from({ length: 10 }, (_, i) => <Heart key={i} size={12 + (i % 3) * 4} style={{ '--i': i }} fill="currentColor" />)}</div> : null; }
+
+function getTransitionKind(from, to) {
+  if ((from === 1 && to === 2) || (from === 2 && to === 1)) return 'paper';
+  if ((from === 2 && to === 3) || (from === 3 && to === 2)) return 'photo';
+  if ((from === 3 && to === 4) || (from === 4 && to === 3)) return 'paper';
+  if ((from === 4 && to === 5) || (from === 5 && to === 4)) return 'heart';
+  if ((from === 5 && to === 6) || (from === 6 && to === 5)) return 'ticket';
+  if ((from === 6 && to === 7) || (from === 7 && to === 6)) return 'record';
+  if ((from === 7 && to === 8) || (from === 8 && to === 7)) return 'sparkle';
+  return null;
+}
+
+function TransitionBridge({ kind }) {
+  if (!kind) return null;
+  return <motion.div className={`transition-bridge bridge-${kind}`} initial={{ opacity: 0, scale: .7, y: 24, rotate: -4 }} animate={{ opacity: 1, scale: 1, y: 0, rotate: 0 }} exit={{ opacity: 0, scale: 1.18, y: -24, rotate: 4 }} transition={{ duration: .68, ease: [0.22, 1, 0.36, 1] }} aria-hidden="true">
+    {kind === 'paper' && <span className="bridge-paper-mark">♡</span>}
+    {kind === 'photo' && <img src={loveStory.photos[0].src} alt="" />}
+    {kind === 'heart' && <Heart fill="currentColor" size={72} />}
+    {kind === 'ticket' && <span className="bridge-ticket-mark">LOVE TICKET<br /><b>♡</b></span>}
+    {kind === 'record' && <span className="bridge-record-mark"><Music2 size={24} /></span>}
+    {kind === 'sparkle' && <Sparkles size={72} />}
+  </motion.div>;
+}
 
 function EnvelopeScene({ onOpen }) {
   const [pressed, setPressed] = useState(false);
@@ -30,14 +58,14 @@ function EnvelopeScene({ onOpen }) {
       <motion.div className="mini-polaroid" initial={{ opacity: 0, y: 18, rotate: -12 }} animate={{ opacity: 1, y: 0, rotate: -12 }} transition={{ delay: 0.35, duration: 0.8 }}><div>♡</div><span>a day worth keeping</span></motion.div>
       <motion.div className="letter-stage" initial={{ opacity: 0, y: 70, rotate: -1 }} animate={{ opacity: 1, y: 0, rotate: 0 }} transition={{ delay: 0.2, type: 'spring', stiffness: 80, damping: 15 }}>
         <div className={`love-envelope ${pressed ? 'is-opening' : ''}`}>
-          <div className="letter-sheet"><span>for my favorite person</span><i>♡</i></div>
+          <motion.div layoutId="love-letter-paper" className="letter-sheet"><span>for my favorite person</span><i>♡</i></motion.div>
           <div className="envelope-back" />
           <div className="envelope-pocket" />
           <div className="envelope-fold fold-left" />
           <div className="envelope-fold fold-right" />
           <div className="envelope-address"><strong>for {loveStory.nickname} <Heart size={18} fill="currentColor" /></strong><span>open when you're ready</span></div>
           <div className="envelope-flap" />
-          <button className="wax-seal" onClick={() => { setPressed(true); window.setTimeout(onOpen, 1050); }} aria-label="Open the letter">
+          <button className="wax-seal" onClick={() => { setPressed(true); onOpen(); }} aria-label="Open the letter">
             <span className="seal-cracks" aria-hidden="true">╲　╱<br />╱　╲</span><span className="seal-word">for you</span><Heart size={19} fill="currentColor" /><span className="seal-shine" aria-hidden="true" />
           </button>
         </div>
@@ -49,9 +77,9 @@ function EnvelopeScene({ onOpen }) {
   </motion.section>;
 }
 
-function IntroScene({ onSecret }) {
+function IntroScene({ onSecret, isEmerging = false }) {
   return <motion.section className="scene centered-scene" {...sceneMotion}>
-    <Paper className="intro-paper">
+    <Paper layoutId="love-letter-paper" className={`intro-paper ${isEmerging ? 'paper-waiting' : ''}`}>
       <span className="paper-corner top-left">✦</span><span className="paper-corner bottom-right">♡</span>
       <p className="date-stamp">{loveStory.anniversaryDate}</p>
       <p className="eyebrow">a note for my favorite person</p>
@@ -65,7 +93,7 @@ function IntroScene({ onSecret }) {
 
 function LetterScene({ onPhoto, onSecret }) {
   return <motion.section className="scene letter-scene" {...sceneMotion}>
-    <Paper className="letter-paper">
+    <Paper layoutId="love-letter-paper" className="letter-paper">
       <div className="letter-content"><p className="eyebrow">a few words I keep meaning to say</p><h2>Dear weirdo,</h2>{loveStory.letter.slice(1).map((paragraph, index) => <motion.p key={paragraph} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: index * 0.16 + 0.25 }}>{paragraph}</motion.p>)}<button className="text-heart" onClick={onSecret} aria-label="Reveal a secret message"><Heart size={20} fill="currentColor" /></button></div>
       <button className="letter-photo" onClick={onPhoto} aria-label="Open the photo"><Tape /><img src={loveStory.photos[0].src} alt={loveStory.photos[0].alt} /><span>{loveStory.photos[0].caption}</span></button>
     </Paper>
@@ -101,13 +129,13 @@ function SongScene({ onFinish }) {
 function FinalScene({ onSecret }) { return <motion.section className="scene final-scene" {...sceneMotion}><div className="final-stars" aria-hidden="true">✦　♡　✧　♡　✦</div><p className="eyebrow">the last page, for now</p><h1>Two years down.<br /><em>And I'd still choose you.</em></h1><p className="final-message">{loveStory.finalMessage}</p><p className="signature">Happy anniversary,<br /><em>my love. ♡</em></p><button className="one-more" onClick={onSecret}>one more thing... <Heart size={16} fill="currentColor" /></button></motion.section>; }
 
 function App() {
-  const [scene, setScene] = useState(0); const [opened, setOpened] = useState(false); const [secret, setSecret] = useState(''); const [selectedPhoto, setSelectedPhoto] = useState(null); const touchStart = useRef(0);
+  const [scene, setScene] = useState(0); const [direction, setDirection] = useState(1); const [opened, setOpened] = useState(false); const [opening, setOpening] = useState(false); const [bridge, setBridge] = useState(null); const [secret, setSecret] = useState(''); const [selectedPhoto, setSelectedPhoto] = useState(null); const touchStart = useRef(0); const bridgeTimer = useRef(null);
   const totalScenes = sceneNames.length + 1;
-  const goTo = (next) => setScene(Math.max(0, Math.min(totalScenes - 1, next)));
+  const goTo = (next) => { const bounded = Math.max(0, Math.min(totalScenes - 1, next)); if (bounded === scene) return; setDirection(bounded > scene ? 1 : -1); const kind = getTransitionKind(scene, bounded); if (kind) { window.clearTimeout(bridgeTimer.current); setBridge(kind); bridgeTimer.current = window.setTimeout(() => setBridge(null), 760); } setScene(bounded); };
   const showSecret = (message = loveStory.secretMessages.intro) => { setSecret(message); window.setTimeout(() => setSecret(''), 2600); };
   useEffect(() => { const onKey = (event) => { if (event.key === 'ArrowRight') goTo(scene + 1); if (event.key === 'ArrowLeft') goTo(scene - 1); }; window.addEventListener('keydown', onKey); return () => window.removeEventListener('keydown', onKey); }, [scene]);
-  const renderScene = () => { if (scene === 0) return <EnvelopeScene onOpen={() => { setOpened(true); goTo(1); }} />; if (scene === 1) return <IntroScene onSecret={() => showSecret()} />; if (scene === 2) return <LetterScene onPhoto={() => setSelectedPhoto(loveStory.photos[0])} onSecret={() => showSecret(loveStory.secretMessages.photo)} />; if (scene === 3) return <MemoriesScene onSelect={setSelectedPhoto} />; if (scene === 4) return <ReasonsScene onSecret={() => showSecret('I love you more than I can fit on a sticky note.')} />; if (scene === 5) return <KissesScene />; if (scene === 6) return <motion.section className="scene coupons-scene" {...sceneMotion}><div className="scene-heading"><p className="eyebrow">a small supply of good things</p><h2>Coupons <em>for you</em></h2><p>Use them freely. I never run out when it comes to you.</p></div><div className="coupon-grid">{loveStory.coupons.map((coupon, index) => <CouponCard key={coupon} text={coupon} index={index} />)}</div></motion.section>; if (scene === 7) return <SongScene onFinish={() => goTo(8)} />; return <FinalScene onSecret={() => showSecret('I love you more than this website has enough pages to say.')} />; };
-  return <main className={`app ${opened ? 'opened' : ''}`} onTouchStart={(event) => { touchStart.current = event.changedTouches[0].clientX; }} onTouchEnd={(event) => { const distance = event.changedTouches[0].clientX - touchStart.current; if (Math.abs(distance) > 55) goTo(scene + (distance < 0 ? 1 : -1)); }}><div className="grain" /><AnimatePresence mode="wait">{renderScene()}</AnimatePresence>{scene > 0 && <Navigation scene={scene} total={totalScenes} onNavigate={goTo} />}{secret && <motion.div className="secret-toast" initial={{ opacity: 0, y: 12, scale: .92 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0 }}><Heart size={16} fill="currentColor" />{secret}</motion.div>}{selectedPhoto && <motion.div className="photo-modal" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setSelectedPhoto(null)}><button className="modal-close" aria-label="Close photo"><X size={20} /></button><motion.div className="modal-photo" initial={{ scale: .8, rotate: -5 }} animate={{ scale: 1, rotate: 0 }} onClick={(event) => event.stopPropagation()}><img src={selectedPhoto.src} alt={selectedPhoto.alt} /><strong>{selectedPhoto.caption}</strong><span>{selectedPhoto.date}</span></motion.div></motion.div>}</main>;
+  const renderScene = () => { if (scene === 0) return <EnvelopeScene onOpen={() => { setOpened(true); setOpening(true); window.setTimeout(() => goTo(1), 720); window.setTimeout(() => setOpening(false), 1550); }} />; if (scene === 1) return <IntroScene isEmerging={opening} onSecret={() => showSecret()} />; if (scene === 2) return <LetterScene onPhoto={() => setSelectedPhoto(loveStory.photos[0])} onSecret={() => showSecret(loveStory.secretMessages.photo)} />; if (scene === 3) return <MemoriesScene onSelect={setSelectedPhoto} />; if (scene === 4) return <ReasonsScene onSecret={() => showSecret('I love you more than I can fit on a sticky note.')} />; if (scene === 5) return <KissesScene />; if (scene === 6) return <motion.section className="scene coupons-scene" {...sceneMotion}><div className="scene-heading"><p className="eyebrow">a small supply of good things</p><h2>Coupons <em>for you</em></h2><p>Use them freely. I never run out when it comes to you.</p></div><div className="coupon-grid">{loveStory.coupons.map((coupon, index) => <CouponCard key={coupon} text={coupon} index={index} />)}</div></motion.section>; if (scene === 7) return <SongScene onFinish={() => goTo(8)} />; return <FinalScene onSecret={() => showSecret('I love you more than this website has enough pages to say.')} />; };
+  return <main className={`app ${opened ? 'opened' : ''}`} onTouchStart={(event) => { touchStart.current = event.changedTouches[0].clientX; }} onTouchEnd={(event) => { const distance = event.changedTouches[0].clientX - touchStart.current; if (Math.abs(distance) > 55) goTo(scene + (distance < 0 ? 1 : -1)); }}><div className="world-backdrop" /><div className="grain" /><LayoutGroup id="love-letter-world"><AnimatePresence mode="sync" custom={direction}><motion.div key={scene} className="scene-layer" custom={direction} variants={pageVariants} initial="initial" animate="animate" exit="exit">{renderScene()}</motion.div></AnimatePresence></LayoutGroup><AnimatePresence>{opening && <motion.div className="opening-paper" initial={{ opacity: 0, x: '-50%', y: '-50%', scale: .45 }} animate={{ opacity: 1, x: '-50%', y: '-50%', scale: 1, width: 'calc(100vw - 44px)', height: 'calc(100svh - 58px)' }} exit={{ opacity: 0, scale: 1.02, transition: { duration: .35 } }} transition={{ duration: .95, ease: [0.22, 1, 0.36, 1] }} aria-hidden="true" />}</AnimatePresence><AnimatePresence mode="wait"><TransitionBridge key={bridge || 'no-bridge'} kind={bridge} /></AnimatePresence>{scene > 0 && <Navigation scene={scene} total={totalScenes} onNavigate={goTo} />}{secret && <motion.div className="secret-toast" initial={{ opacity: 0, y: 12, scale: .92 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0 }}><Heart size={16} fill="currentColor" />{secret}</motion.div>}{selectedPhoto && <motion.div className="photo-modal" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setSelectedPhoto(null)}><button className="modal-close" aria-label="Close photo"><X size={20} /></button><motion.div className="modal-photo" initial={{ scale: .8, rotate: -5 }} animate={{ scale: 1, rotate: 0 }} onClick={(event) => event.stopPropagation()}><img src={selectedPhoto.src} alt={selectedPhoto.alt} /><strong>{selectedPhoto.caption}</strong><span>{selectedPhoto.date}</span></motion.div></motion.div>}</main>;
 }
 
 function Navigation({ scene, total, onNavigate }) { return <div className="navigation"><button onClick={() => onNavigate(scene - 1)} disabled={scene === 0} aria-label="Previous page"><ArrowLeft size={18} /></button><div className="progress">{Array.from({ length: total }, (_, index) => <button key={index} className={scene === index ? 'active' : ''} onClick={() => onNavigate(index)} aria-label={`Go to ${sceneNames[index] || 'final message'}`}><span>{index === 0 ? '✦' : '♡'}</span></button>)}</div><button onClick={() => onNavigate(scene + 1)} disabled={scene === total - 1} aria-label="Next page"><ArrowRight size={18} /></button></div>; }
