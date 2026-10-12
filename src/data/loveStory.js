@@ -37,7 +37,7 @@ export const loveStory = {
   song: {
     title: 'Yellow',
     artist: 'Coldplay',
-    cover: './photos/song-cover.svg',
+    cover: './photos/album-cover.png',
     audio: './audio/our-song.mp3',
     spotifyUrl: '',
   },
