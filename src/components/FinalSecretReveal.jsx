@@ -1,6 +1,7 @@
+import { createPortal } from 'react-dom';
 import { useState } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
-import { Heart, Sparkles } from 'lucide-react';
+import { Heart, Sparkles, X } from 'lucide-react';
 
 const particleSymbols = ['♡', '✦', '✧', '♥', '⋆'];
 
@@ -22,11 +23,12 @@ function Cat({ tone, side, nuzzling, reducedMotion }) {
   </motion.svg>;
 }
 
-function FinalSecretReveal({ open, data }) {
+function FinalSecretReveal({ open, data, onClose }) {
   const reducedMotion = useReducedMotion();
   const [clicks, setClicks] = useState(0);
   const [nuzzling, setNuzzling] = useState(false);
   const [burst, setBurst] = useState(0);
+  const [imageFailed, setImageFailed] = useState(false);
   const handleClick = () => {
     setClicks((value) => value + 1);
     setBurst((value) => value + 1);
@@ -35,18 +37,23 @@ function FinalSecretReveal({ open, data }) {
   };
   const particles = Array.from({ length: 12 }, (_, index) => ({ symbol: particleSymbols[(index + burst) % particleSymbols.length], index }));
   if (!open) return null;
-  return <motion.section className="final-secret" initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .78, ease: [0.22, 1, 0.36, 1] }} aria-live="polite">
+  return createPortal(<AnimatePresence mode="wait">
+    <motion.section key="final-secret" className="final-secret-overlay" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: .55, ease: [0.22, 1, 0.36, 1] }} aria-live="polite">
+      <motion.div className="final-secret" initial={{ opacity: 0, scale: .94, y: 24 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: .98, y: 14 }} transition={{ delay: .08, duration: .7, ease: [0.22, 1, 0.36, 1] }}>
+        <button type="button" className="secret-close" onClick={onClose} aria-label="Close the final surprise"><X size={18} /></button>
       <div className="final-secret-paper">
         <div className="secret-doodle secret-doodle-left">✦</div><div className="secret-doodle secret-doodle-right">♡</div>
         <motion.div className="secret-copy" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: .28, duration: .6 }}><p className="secret-eyebrow">a final little secret</p><h2>{data.title}</h2><p>{data.message}</p></motion.div>
         <motion.button className="cat-couple" onClick={handleClick} aria-label="Give the cat couple another kiss" initial={{ opacity: 0, scale: .72, y: 30 }} animate={{ opacity: 1, scale: 1, y: 0 }} transition={{ delay: .38, type: 'spring', stiffness: 170, damping: 14 }}>
-          <Cat tone="brown" side="left" nuzzling={nuzzling} reducedMotion={reducedMotion} /><Cat tone="cream" side="right" nuzzling={nuzzling} reducedMotion={reducedMotion} />
+          {data.coupleImage && !imageFailed ? <motion.img className="cat-couple-image" src={data.coupleImage} alt="A cream and brown cat couple cuddling" onError={() => setImageFailed(true)} animate={reducedMotion ? {} : (nuzzling ? { x: 4, scale: [1, 1.04, .98, 1], rotate: [-1, 1, -1] } : { y: [0, -3, 0], rotate: [-1, 0, -1] })} transition={nuzzling ? { duration: .72, ease: [0.22, 1, 0.36, 1] } : { duration: 3.8, repeat: Infinity, ease: 'easeInOut' }} /> : <><Cat tone="brown" side="left" nuzzling={nuzzling} reducedMotion={reducedMotion} /><Cat tone="cream" side="right" nuzzling={nuzzling} reducedMotion={reducedMotion} /></>}
           <AnimatePresence>{nuzzling && <motion.span className="kiss-pop" initial={{ opacity: 0, scale: 0, y: 12 }} animate={{ opacity: 1, scale: 1, y: -8 }} exit={{ opacity: 0, scale: .5, y: -25 }} transition={{ duration: .45 }}><Heart size={26} fill="currentColor" /></motion.span>}</AnimatePresence>
           {particles.map(({ symbol, index }) => <motion.span key={`${burst}-${index}`} className="secret-particle" style={{ '--particle-x': `${(index % 2 ? 1 : -1) * (44 + index * 9)}px`, '--particle-y': `${-36 - (index % 4) * 28}px`, '--particle-r': `${(index % 2 ? 1 : -1) * (8 + index * 7)}deg` }} initial={{ opacity: 0, scale: .3, x: 0, y: 15 }} animate={{ opacity: [0, 1, 1, 0], scale: [0.3, 1, .9, .7], x: 'var(--particle-x)', y: 'var(--particle-y)', rotate: 'var(--particle-r)' }} transition={{ duration: 1.2, delay: index * .025 }} aria-hidden="true">{symbol}</motion.span>)}
         </motion.button>
         <div className="secret-footer"><Sparkles size={14} />{clicks > 4 ? data.afterClicks : 'tap them for a little extra love'}<Sparkles size={14} /></div>
       </div>
-    </motion.section>;
+      </motion.div>
+    </motion.section>
+  </AnimatePresence>, document.body);
 }
 
 export default FinalSecretReveal;

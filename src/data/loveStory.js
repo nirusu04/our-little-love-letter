@@ -51,5 +51,6 @@ export const loveStory = {
     title: 'every dudu needs a bubu ♡',
     message: 'and I am so glad mine is you.',
     afterClicks: 'okay okay... that is a lot of love ♡',
+    coupleImage: '/photos/cat-couple.png',
   },
 };
