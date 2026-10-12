@@ -7,10 +7,11 @@ export const loveStory = {
   intro: 'I made you a tiny world out of all the reasons I love us.',
   letter: [
     'Dear love,',
-    'Somehow, two years have passed and It is still not enough. This is only the beginning to our beautiful journey together.',
-    'Thank you for making ordinary days feel like something worth keeping. I love doing life with you, our quiet moments, and the way being with you feels like coming home.',
-    'Here is a small collection of the moments, memories, and ridiculously many kisses I am saving for us.',
-    'Love always, Your mayalu <3',
+    'Somehow, two years have passed and it is not enough, i want many more years with you. lets be happy and healthy together and create a beautiful life for ourselves.',
+    'I made this because i want you to know just how deeply you mean to me.',
+    'Even after all the silly fights I hope, we keep loving, supporting and stay with each other until coming years and make new memories.',
+    "Here's to many more memories and beautiful moments together.",
+    'love always, your mayalu <3',
   ],
   photos: [
     { src: './photos/story/memory-one.png', caption: 'Our fated first matching outfit  :P', date: '12-02-2025/ NSA event', alt: 'Placeholder scrapbook photo one' },
