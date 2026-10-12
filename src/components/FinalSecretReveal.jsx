@@ -34,8 +34,8 @@ function FinalSecretReveal({ open, data }) {
     window.setTimeout(() => setNuzzling(false), 760);
   };
   const particles = Array.from({ length: 12 }, (_, index) => ({ symbol: particleSymbols[(index + burst) % particleSymbols.length], index }));
-  return <AnimatePresence>
-    {open && <motion.section className="final-secret" initial={{ height: 0, opacity: 0, y: 18 }} animate={{ height: 'auto', opacity: 1, y: 0 }} exit={{ height: 0, opacity: 0, y: 12 }} transition={{ duration: .78, ease: [0.22, 1, 0.36, 1] }} aria-live="polite">
+  if (!open) return null;
+  return <motion.section className="final-secret" initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .78, ease: [0.22, 1, 0.36, 1] }} aria-live="polite">
       <div className="final-secret-paper">
         <div className="secret-doodle secret-doodle-left">✦</div><div className="secret-doodle secret-doodle-right">♡</div>
         <motion.div className="secret-copy" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: .28, duration: .6 }}><p className="secret-eyebrow">a final little secret</p><h2>{data.title}</h2><p>{data.message}</p></motion.div>
@@ -46,8 +46,7 @@ function FinalSecretReveal({ open, data }) {
         </motion.button>
         <div className="secret-footer"><Sparkles size={14} />{clicks > 4 ? data.afterClicks : 'tap them for a little extra love'}<Sparkles size={14} /></div>
       </div>
-    </motion.section>}
-  </AnimatePresence>;
+    </motion.section>;
 }
 
 export default FinalSecretReveal;

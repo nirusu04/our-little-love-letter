@@ -129,7 +129,8 @@ function SongScene({ onFinish }) {
 
 function FinalScene({ initiallyRevealed = false }) {
   const [revealed, setRevealed] = useState(initiallyRevealed);
-  return <motion.section className="scene final-scene" {...sceneMotion}><div className="final-stars" aria-hidden="true">✦　♡　✧　♡　✦</div><p className="eyebrow">the last page, for now</p><h1>Two years down.<br /><em>And I'd still choose you.</em></h1><p className="final-message">{loveStory.finalMessage}</p><p className="signature">Happy anniversary,<br /><em>my love. ♡</em></p><button className="one-more" onClick={() => setRevealed(true)}>one more thing... <Heart size={16} fill="currentColor" /></button><FinalSecretReveal open={revealed} data={loveStory.finalSecret} /></motion.section>;
+  useEffect(() => { if (initiallyRevealed) setRevealed(true); }, [initiallyRevealed]);
+  return <motion.section className="scene final-scene" {...sceneMotion}><div className="final-stars" aria-hidden="true">✦　♡　✧　♡　✦</div><p className="eyebrow">the last page, for now</p><h1>Two years down.<br /><em>And I'd still choose you.</em></h1><p className="final-message">{loveStory.finalMessage}</p><p className="signature">Happy anniversary,<br /><em>my love. ♡</em></p><button type="button" className="one-more" onClick={() => setRevealed(true)}>one more thing... <Heart size={16} fill="currentColor" /></button><FinalSecretReveal open={revealed} data={loveStory.finalSecret} /></motion.section>;
 }
 
 function App() {
