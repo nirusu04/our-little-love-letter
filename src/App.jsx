@@ -12,22 +12,40 @@ function HeartBurst({ burst }) { return burst ? <div className="heart-burst" ari
 
 function EnvelopeScene({ onOpen }) {
   const [pressed, setPressed] = useState(false);
+  const handlePointerMove = (event) => {
+    const bounds = event.currentTarget.getBoundingClientRect();
+    const x = ((event.clientX - bounds.left) / bounds.width - 0.5) * 2;
+    const y = ((event.clientY - bounds.top) / bounds.height - 0.5) * 2;
+    event.currentTarget.style.setProperty('--pointer-x', `${x * 4}px`);
+    event.currentTarget.style.setProperty('--pointer-y', `${y * 4}px`);
+  };
   return <motion.section className="scene envelope-scene" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-    <div className="hero-browser">
-      <div className="browser-chrome"><span /><span /><span /><b>our little love letter</b><i>♡</i></div>
-      <div className="hero-browser-body">
-        <div className={`envelope ${pressed ? 'is-open' : ''}`}>
+    <div className="letter-desk" onPointerMove={handlePointerMove} onPointerLeave={(event) => { event.currentTarget.style.setProperty('--pointer-x', '0px'); event.currentTarget.style.setProperty('--pointer-y', '0px'); }}>
+      <div className="desk-doodle doodle-star doodle-star-one">✦</div>
+      <div className="desk-doodle doodle-star doodle-star-two">✧</div>
+      <div className="desk-doodle doodle-heart doodle-heart-one">♡</div>
+      <div className="desk-doodle doodle-heart doodle-heart-two">♡</div>
+      <div className="dried-flower" aria-hidden="true"><span /><i /><b /><em /></div>
+      <motion.div className="loose-ribbon" animate={{ rotate: [-5, -3, -5], x: [0, 2, 0] }} transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }} />
+      <motion.div className="mini-polaroid" initial={{ opacity: 0, y: 18, rotate: -12 }} animate={{ opacity: 1, y: 0, rotate: -12 }} transition={{ delay: 0.35, duration: 0.8 }}><div>♡</div><span>a day worth keeping</span></motion.div>
+      <motion.div className="letter-stage" initial={{ opacity: 0, y: 70, rotate: -1 }} animate={{ opacity: 1, y: 0, rotate: 0 }} transition={{ delay: 0.2, type: 'spring', stiffness: 80, damping: 15 }}>
+        <div className={`love-envelope ${pressed ? 'is-opening' : ''}`}>
+          <div className="letter-sheet"><span>for my favorite person</span><i>♡</i></div>
           <div className="envelope-back" />
-          <div className="envelope-letter"><span>for {loveStory.nickname.toLowerCase()} <Heart size={14} fill="currentColor" /></span></div>
+          <div className="envelope-pocket" />
+          <div className="envelope-fold fold-left" />
+          <div className="envelope-fold fold-right" />
+          <div className="envelope-address"><strong>for {loveStory.nickname} <Heart size={18} fill="currentColor" /></strong><span>open when you're ready</span></div>
           <div className="envelope-flap" />
           <button className="wax-seal" onClick={() => { setPressed(true); window.setTimeout(onOpen, 1050); }} aria-label="Open the letter">
-            <span>for you</span><Heart size={20} fill="currentColor" />
+            <span className="seal-cracks" aria-hidden="true">╲　╱<br />╱　╲</span><span className="seal-word">for you</span><Heart size={19} fill="currentColor" /><span className="seal-shine" aria-hidden="true" />
           </button>
         </div>
-        <div className="envelope-copy"><p className="eyebrow">a tiny world, made for you</p><h1>I made you<br /><em>something.</em></h1><p>tap the seal</p></div>
-      </div>
+        <div className="seal-prompt"><span>tap the seal</span><Heart size={13} fill="currentColor" /><i aria-hidden="true" /></div>
+      </motion.div>
+      <div className="anniversary-stamp"><span>PRIVATE POST</span><strong>{loveStory.anniversaryDate.replaceAll('.', ' • ')}</strong><small>♡ with love</small></div>
+      <p className="landing-whisper">a little something, just for you</p>
     </div>
-    <motion.div className="envelope-stars" animate={{ y: [0, -8, 0], rotate: [0, 6, 0] }} transition={{ repeat: Infinity, duration: 4 }}><Sparkles size={22} /><span>♡</span><Sparkles size={13} /></motion.div>
   </motion.section>;
 }
 
