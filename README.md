@@ -19,7 +19,7 @@ npm run dev
 
 All personal text, dates, photos, memories, coupons, and song settings live in `src/data/loveStory.js`.
 
-- Change your photos: replace the placeholder files in `public/photos/`, then update the `src` values if your filenames differ.
+- Change your story photos: replace the files in `public/photos/story/`, then update the `src` values if your filenames differ. The animated final-reveal frames stay directly in `public/photos/` and should not be replaced by the story photos.
 - Change his name: `boyfriendName` and `nickname` in `src/data/loveStory.js`.
 - Change the letter: `letter` in `src/data/loveStory.js`.
 - Change the anniversary date: `anniversaryDate` in `src/data/loveStory.js`.

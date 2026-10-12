@@ -14,7 +14,7 @@ const pageVariants = {
 
 function Paper({ children, className = '', ...props }) { return <motion.div className={`paper ${className}`} {...props}>{children}</motion.div>; }
 function Tape() { return <span className="tape" aria-hidden="true" />; }
-function HeartBurst({ burst }) { return burst ? <div className="heart-burst" aria-hidden="true">{Array.from({ length: 10 }, (_, i) => <Heart key={i} size={12 + (i % 3) * 4} style={{ '--i': i }} fill="currentColor" />)}</div> : null; }
+function HeartBurst({ burst }) { return burst ? <div className="heart-burst" aria-hidden="true">{Array.from({ length: 10 }, (_, i) => <span key={i} style={{ '--i': i }}>💋</span>)}</div> : null; }
 
 function getTransitionKind(from, to) {
   if ((from === 1 && to === 2) || (from === 2 && to === 1)) return 'paper';
@@ -56,7 +56,7 @@ function EnvelopeScene({ onOpen }) {
       <div className="desk-doodle doodle-heart doodle-heart-two">♡</div>
       <div className="dried-flower" aria-hidden="true"><span /><i /><b /><em /></div>
       <motion.div className="loose-ribbon" animate={{ rotate: [-5, -3, -5], x: [0, 2, 0] }} transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }} />
-      <motion.div className="mini-polaroid" initial={{ opacity: 0, y: 18, rotate: -12 }} animate={{ opacity: 1, y: 0, rotate: -12 }} transition={{ delay: 0.35, duration: 0.8 }}><div>♡</div><span>a day worth keeping</span></motion.div>
+      <motion.div className="mini-polaroid" initial={{ opacity: 0, y: 18, rotate: -12 }} animate={{ opacity: 1, y: 0, rotate: -12 }} transition={{ delay: 0.35, duration: 0.8 }}><div>♡</div><span>a letter worth keeping</span></motion.div>
       <motion.div className="letter-stage" initial={{ opacity: 0, y: 70, rotate: -1 }} animate={{ opacity: 1, y: 0, rotate: 0 }} transition={{ delay: 0.2, type: 'spring', stiffness: 80, damping: 15 }}>
         <div className={`love-envelope ${pressed ? 'is-opening' : ''}`}>
           <motion.div layoutId="love-letter-paper" className="letter-sheet"><span>for my favorite person</span><i>♡</i></motion.div>
@@ -95,7 +95,7 @@ function IntroScene({ onSecret, isEmerging = false }) {
 function LetterScene({ onPhoto, onSecret }) {
   return <motion.section className="scene letter-scene" {...sceneMotion}>
     <Paper layoutId="love-letter-paper" className="letter-paper">
-      <div className="letter-content"><p className="eyebrow">a few words I keep meaning to say</p><h2>Dear weirdo,</h2>{loveStory.letter.slice(1).map((paragraph, index) => <motion.p key={paragraph} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: index * 0.16 + 0.25 }}>{paragraph}</motion.p>)}<button className="text-heart" onClick={onSecret} aria-label="Reveal a secret message"><Heart size={20} fill="currentColor" /></button></div>
+      <div className="letter-content"><p className="eyebrow">a few words I keep meaning to say</p><h2>{loveStory.letter[0]}</h2>{loveStory.letter.slice(1).map((paragraph, index) => <motion.p key={paragraph} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: index * 0.16 + 0.25 }}>{paragraph}</motion.p>)}<button className="text-heart" onClick={onSecret} aria-label="Reveal a secret message"><Heart size={20} fill="currentColor" /></button></div>
       <button className="letter-photo" onClick={onPhoto} aria-label="Open the photo"><Tape /><img src={loveStory.photos[0].src} alt={loveStory.photos[0].alt} /><span>{loveStory.photos[0].caption}</span></button>
     </Paper>
   </motion.section>;
@@ -130,7 +130,7 @@ function SongScene({ onFinish }) {
 function FinalScene({ initiallyRevealed = false }) {
   const [revealed, setRevealed] = useState(initiallyRevealed);
   useEffect(() => { if (initiallyRevealed) setRevealed(true); }, [initiallyRevealed]);
-  return <motion.section className="scene final-scene" {...sceneMotion}><div className="final-stars" aria-hidden="true">✦　♡　✧　♡　✦</div><p className="eyebrow">the last page, for now</p><h1>Two years down.<br /><em>And I'd still choose you.</em></h1><p className="final-message">{loveStory.finalMessage}</p><p className="signature">Happy anniversary,<br /><em>my love. ♡</em></p><button type="button" className="one-more" onClick={() => setRevealed(true)}>one more thing... <Heart size={16} fill="currentColor" /></button><FinalSecretReveal open={revealed} data={loveStory.finalSecret} /></motion.section>;
+  return <motion.section className="scene final-scene" {...sceneMotion}><div className="final-stars" aria-hidden="true">✦　♡　✧　♡　✦</div><p className="eyebrow">the last page, for now</p><h1>Two years down.<br /><em>And I'd still choose you.</em></h1><p className="final-message">{loveStory.finalMessage}</p><p className="signature">Happy anniversary,<br /><em>my love. ♡</em></p>{!revealed && <button type="button" className="one-more" onClick={() => setRevealed(true)}>one more thing... <Heart size={16} fill="currentColor" /></button>}<FinalSecretReveal open={revealed} data={loveStory.finalSecret} onClose={() => setRevealed(false)} /></motion.section>;
 }
 
 function App() {
